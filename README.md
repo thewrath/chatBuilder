@@ -5,5 +5,5 @@ ChatBuilder est une collection de classe vous permettant de créer facilement vo
 ## Dépendances
 ### Server:
 Pour faire tourner votre propre application serveur vous avez besoin de:
-*Python2
+* Python2
 
