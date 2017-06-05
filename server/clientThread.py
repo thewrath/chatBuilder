@@ -3,6 +3,7 @@
 
 import socket
 import threading
+from database import *
 
 """
     ClientThread module
@@ -11,7 +12,7 @@ import threading
 
 class ClientThread(threading.Thread):
 
-    def __init__(self, ip, port, clientsocket):
+    def __init__(self, ip, port, clientsocket, db):
     	
     	"""
         Constructor of ClientThread.
@@ -29,6 +30,8 @@ class ClientThread(threading.Thread):
         self.port = port
         self.clientsocket = clientsocket
         self.bufLen = 2048
+        self.connected = False
+        seld.database = db
         print("[+] Nouveau thread pour %s %s" % (self.ip, self.port, ))
 
     def run(self): 
@@ -60,6 +63,13 @@ class ClientThread(threading.Thread):
 
         self.sortData(receiveData)
 
+    def sendData(self, *datas):
+        dataToSend = "&"
+        for data in datas:
+            dataToSend += "&&"
+            dataToSend += data
+        print(dataToSend)
+
     def sortData(self, data):
 
         """
@@ -88,6 +98,15 @@ class ClientThread(threading.Thread):
                 temp = ""       
         print(sortedData)
 
-        #if(sortedData[0] == ""):
+        if(sortedData[0] == "560" and !self.connected):
+            if self.database.loginUser(sortedData[1], sortedData[2]):
+                self.connected = True
+                self.sendData("065")
+        elif(sortedData[0] == "561" and !self.connected):
+            if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
+                self.connected = True
+                self.sendData("165")
+        
+
 
 

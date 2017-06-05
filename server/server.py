@@ -3,6 +3,7 @@
 
 import socket
 from clientThread import *
+from database import *
 
 """
 	Server module
@@ -41,7 +42,7 @@ class Server():
 			print("En écoute...")
 			print(self.tcpsock.getsockname())
 			(clientsocket, (ip, port)) = self.tcpsock.accept()
-			newthread = ClientThread(ip, port, clientsocket)
+			newthread = ClientThread(ip, port, clientsocket, Database("localhost","root","root","chatAppDB"))
 			newthread.start()
 
 
