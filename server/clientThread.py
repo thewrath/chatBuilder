@@ -3,6 +3,7 @@
 
 import socket
 import threading
+
 from database import *
 
 """
@@ -13,8 +14,7 @@ from database import *
 class ClientThread(threading.Thread):
 
     def __init__(self, ip, port, clientsocket, db):
-    	
-    	"""
+        """
         Constructor of ClientThread.
  
         This initialise a new client thread with an ip
@@ -23,8 +23,7 @@ class ClientThread(threading.Thread):
         :param ip: Client's IP
         :param port: Server port
         :rtype: void
-    	"""
-
+        """
         threading.Thread.__init__(self)
         self.ip = ip
         self.port = port
@@ -32,22 +31,21 @@ class ClientThread(threading.Thread):
         self.bufLen = 2048
         self.connected = False
         seld.database = db
-        print("[+] Nouveau thread pour %s %s" % (self.ip, self.port, ))
+        print("[+] Nouveau thread pour %s %s" % (self.ip, self.port))
 
-    def run(self): 
-
-    	"""
+    def run(self):
+        """
         Run method.
  
         Like another thread run method
        
         :rtype: void
-    	"""
+        """
    
-        print("Connection de %s %s" % (self.ip, self.port, ))
+        print("Connection de %s %s" % (self.ip, self.port))
         self.receiveData()
         print("Client déconnecté...")
-
+        
     def receiveData(self):
 
         """
@@ -98,15 +96,19 @@ class ClientThread(threading.Thread):
                 temp = ""       
         print(sortedData)
 
-        if(sortedData[0] == "560" and !self.connected):
+        if(sortedData[0] == "560" and not self.connected):
             if self.database.loginUser(sortedData[1], sortedData[2]):
                 self.connected = True
+                self.sendData("560")
+            else:
                 self.sendData("065")
-        elif(sortedData[0] == "561" and !self.connected):
+
+        elif(sortedData[0] == "561" and not self.connected):
             if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
                 self.connected = True
-                self.sendData("165")
-        
+                self.sendData("561")
+            else:
+                self.sendData("165")    
 
 
 

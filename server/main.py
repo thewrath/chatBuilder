@@ -4,9 +4,9 @@
 from server import *
 
 
-server = Server()
+server = Server('serverConfig.ini')
 
-server.start(10)
+server.start()
 
 
 

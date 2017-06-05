@@ -55,5 +55,3 @@ class Database:
 	def dispose(self):
 		self.conn.close()
 
-
-db = Database("localhost","root","root","chatAppDB")
