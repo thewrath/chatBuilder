@@ -1,1 +1,3 @@
 ajouter une classe pour la configfile pour que ce soit plus propre 
+
+corriger la boucle d'écoute du serveur 

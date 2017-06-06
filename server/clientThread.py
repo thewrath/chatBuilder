@@ -29,8 +29,9 @@ class ClientThread(threading.Thread):
         self.port = port
         self.clientsocket = clientsocket
         self.bufLen = 2048
-        self.connected = False
-        seld.database = db
+        self.userConnected = False
+        self.clientConnected = True
+        self.database = db
         print("[+] Nouveau thread pour %s %s" % (self.ip, self.port))
 
     def run(self):
@@ -43,9 +44,10 @@ class ClientThread(threading.Thread):
         """
    
         print("Connection de %s %s" % (self.ip, self.port))
-        self.receiveData()
+        while(self.clientConnected):
+            self.receiveData()
         print("Client déconnecté...")
-        
+
     def receiveData(self):
 
         """
@@ -63,10 +65,15 @@ class ClientThread(threading.Thread):
 
     def sendData(self, *datas):
         dataToSend = "&"
+        count = len(datas)
         for data in datas:
-            dataToSend += "&&"
+            count = count - 1
             dataToSend += data
-        print(dataToSend)
+            if not count == 1:
+                dataToSend += "&&"
+            else:
+                dataToSend += "&"
+                print(dataToSend)
 
     def sortData(self, data):
 
@@ -96,19 +103,20 @@ class ClientThread(threading.Thread):
                 temp = ""       
         print(sortedData)
 
-        if(sortedData[0] == "560" and not self.connected):
-            if self.database.loginUser(sortedData[1], sortedData[2]):
-                self.connected = True
-                self.sendData("560")
-            else:
-                self.sendData("065")
+        if len(sortedData) >= 3:
+            if(sortedData[0] == "560" and not self.userConnected):
+                if self.database.loginUser(sortedData[1], sortedData[2]):
+                    self.userConnected = True
+                    self.sendData("560")
+                else:
+                    self.sendData("065")
 
-        elif(sortedData[0] == "561" and not self.connected):
-            if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
-                self.connected = True
-                self.sendData("561")
-            else:
-                self.sendData("165")    
+            elif(sortedData[0] == "561" and not self.userConnected):
+                if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
+                    self.userConnected = True
+                    self.sendData("561")
+                else:
+                    self.sendData("165") 
 
 
 
