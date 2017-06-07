@@ -5,10 +5,11 @@ ChatBuilder est une collection de classe vous permettant de créer facilement vo
 ## Dépendances
 ### Server:
 Pour faire tourner votre propre application serveur vous avez besoin de:
-* Python2
+* Python3
+* pymysql
 * Base de donnée SQL
 ### Client:
-Vous devez créer vous même votre client en utilisant notre API en cpp : 
+Vous devez créer vous même votre client en utilisant notre API en python : 
 ou un des binding suivant :
-* Python
+* Cpp
 
