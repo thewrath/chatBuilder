@@ -60,5 +60,10 @@ class Client:
 	def registerUser(self, username, password, email):
 		self.sendData("561", username, password, email)
 
+	def sendMessage(self, senderName, receiverName, content):
+		self.sendData("562", senderName, receiverName, content)
+
 	def disconnect(self):
 		self.tcpsocket.close()
+
+	
