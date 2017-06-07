@@ -20,7 +20,7 @@ class Database:
 			password varchar(50) DEFAULT NULL, email varchar(100) DEFAULT NULL, PRIMARY KEY(id) );
 			""")
 		cursor.execute("""
-			CREATE TABLE IF NOT EXISTS message (id int(5) NOT NULL AUTO_INCREMENT, sender varchar(50) DEFAULT NULL, 
+			CREATE TABLE IF NOT EXISTS messages (id int(5) NOT NULL AUTO_INCREMENT, sender varchar(50) DEFAULT NULL, 
 			receiver varchar(50) DEFAULT NULL, content varchar(1000) DEFAULT NULL, PRIMARY KEY(id) );
 			""")
 
@@ -58,20 +58,22 @@ class Database:
 			return register
 
 	def test(args, types):
-    for a, t in zip(args, types):
-        if not isinstance(a, t):
-            return False
-        else:
-        	return True
+		for a, t in zip(args, types):
+			if not isinstance(a, t):
+				return False
+			else:
+				return True
 
-	def saveMsg(self, sender, receiver, content):		
-		if saved != test((sender, receiver, content), (str, str, str)):
+	def saveMsg(self, sender, receiver, content):	
+		saved = False	
+		if not test((sender, receiver, content), (str, str, str)):
 			raise TypeError("Mauvais type")
 		try:
 			with self.conn.cursor() as cursor:				
 				sql = "INSERT INTO `message` (`sender`, `receiver`, `content`) VALUES (%s, %s, %s)"
 				cursor.execute(sql, (sender, receiver, content))
 				self.conn.commit()
+				saved = True
 		finally:
 			self.dispose()
 			return saved
@@ -86,7 +88,7 @@ class Database:
 				if result:
 					find = True
 				else:
-					print "No available messages"
+					print("No available messages")
 					find = False
 		finally:
 			self,dispose()

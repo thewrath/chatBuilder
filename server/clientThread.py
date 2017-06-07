@@ -60,8 +60,8 @@ class ClientThread(threading.Thread):
         """
 
         receiveData = self.clientsocket.recv(self.bufLen)
-
-        self.sortData(receiveData)
+        print(receiveData.decode())
+        self.sortData(receiveData.decode())
 
     def sendData(self, *datas):
         dataToSend = "&"
@@ -73,7 +73,9 @@ class ClientThread(threading.Thread):
                 dataToSend += "&&"
             else:
                 dataToSend += "&"
-                print(dataToSend)
+        
+        self.clientsocket.send(dataToSend.encode())
+        print(dataToSend)
 
     def sortData(self, data):
 
@@ -102,21 +104,24 @@ class ClientThread(threading.Thread):
                 sortedData.append(temp)
                 temp = ""       
         print(sortedData)
-
         if len(sortedData) >= 3:
-            if(sortedData[0] == "560" and not self.userConnected):
+            if sortedData[0] == "560" and not self.userConnected:
                 if self.database.loginUser(sortedData[1], sortedData[2]):
                     self.userConnected = True
                     self.sendData("560")
                 else:
                     self.sendData("065")
 
-            elif(sortedData[0] == "561" and not self.userConnected):
+            elif sortedData[0] == "561" and not self.userConnected:
                 if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
                     self.userConnected = True
                     self.sendData("561")
                 else:
-                    self.sendData("165") 
+                    self.sendData("165")
+        elif len(sortedData) > 0:
+            if sortedData[0] == "563":
+                print("deconnexion")
+                self.clientConnected = False 
 
 
 

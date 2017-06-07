@@ -5,4 +5,7 @@ from client import *
 
 client = Client()
 
-client.loginUser("thomas","mdp")
+#start client Thread 
+client.start()
+
+client.loginUser("igor","mdp")
