@@ -4,7 +4,7 @@
 import socket
 import threading
 
-from database import *
+from server.database import *
 
 """
     ClientThread module

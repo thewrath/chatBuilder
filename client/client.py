@@ -14,35 +14,41 @@ class Client(threading.Thread):
 
 	def __init__(self):
 
+		self.serverConnected = False
 		threading.Thread.__init__(self)
 		self.tcpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.tcpsocket.connect(("", 1111))
-		self.serverConnected = True
+		try:
+			self.tcpsocket.connect(("", 1111))
+			self.serverConnected = True
+		except:
+			print("Server not found")
+
 		self.userConnected = False
 		self.bufLen = 2048
 
 	def run(self):
-		print("socket Thread launch ")
 		while self.serverConnected:
 			self.receiveData()
 			print(self.userConnected)
 
 	def receiveData(self):
-		receiveData = self.tcpsocket.recv(self.bufLen)
-		self.sortData(receiveData.decode())
+		if self.serverConnected:
+			receiveData = self.tcpsocket.recv(self.bufLen)
+			self.sortData(receiveData.decode())
 	
 	def sendData(self, *datas):
-		dataToSend = "&"
-		count = len(datas)
-		for data in datas:
-			count = count - 1
-			dataToSend += data
-			if not count == 0:
-				dataToSend += "&&"
-			else:
-				dataToSend += "&"
-		self.tcpsocket.send(dataToSend.encode())
-		print(dataToSend)
+		if self.serverConnected:
+			dataToSend = "&"
+			count = len(datas)
+			for data in datas:
+				count = count - 1
+				dataToSend += data
+				if not count == 0:
+					dataToSend += "&&"
+				else:
+					dataToSend += "&"
+			self.tcpsocket.send(dataToSend.encode())
+			print(dataToSend)
 
 	def sortData(self, data):
 		sortedData = []

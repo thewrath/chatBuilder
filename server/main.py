@@ -4,7 +4,7 @@
 from server import *
 
 
-server = Server('serverConfig.ini')
+server = Server('serverConfig.ini','DEFAULT')
 
 server.start()
 

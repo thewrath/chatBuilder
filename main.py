@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from client import *
+from client.client import *
+from server.server import * 
 
-client = Client()
 
+server = Server('server/serverConfig.ini','DEFAULT')
+server.start()
 #start client Thread 
+client = Client()
 client.start()
 
 client.loginUser("igor","mdp")
