@@ -74,6 +74,7 @@ class Client(threading.Thread):
 
 	def disconnect(self):
 		self.sendData("563")
+		self.serverConnected = False
 		self.tcpsocket.close()
 
 	

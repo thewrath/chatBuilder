@@ -9,3 +9,6 @@ client = Client()
 client.start()
 
 client.loginUser("igor","mdp")
+client.sendMessage("thomas","igor","content")
+
+client.disconnect()

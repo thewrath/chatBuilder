@@ -32,6 +32,7 @@ class ClientThread(threading.Thread):
         self.userConnected = False
         self.clientConnected = True
         self.database = db
+        self.COMMAND_LIST = ["560","561","562","563"]
         print("[+] Nouveau thread pour %s %s" % (self.ip, self.port))
 
     def run(self):
@@ -60,7 +61,6 @@ class ClientThread(threading.Thread):
         """
 
         receiveData = self.clientsocket.recv(self.bufLen)
-        print(receiveData.decode())
         self.sortData(receiveData.decode())
 
     def sendData(self, *datas):
@@ -75,7 +75,7 @@ class ClientThread(threading.Thread):
                 dataToSend += "&"
         
         self.clientsocket.send(dataToSend.encode())
-        print(dataToSend)
+       
 
     def sortData(self, data):
 
@@ -102,26 +102,55 @@ class ClientThread(threading.Thread):
                 temp += c 
             if cut:
                 sortedData.append(temp)
-                temp = ""       
-        print(sortedData)
-        if len(sortedData) >= 3:
-            if sortedData[0] == "560" and not self.userConnected:
-                if self.database.loginUser(sortedData[1], sortedData[2]):
-                    self.userConnected = True
-                    self.sendData("560")
-                else:
-                    self.sendData("065")
+                temp = ""  
 
-            elif sortedData[0] == "561" and not self.userConnected:
-                if self.database.registerUser(sortedData[1], sortedData[2], sortedData[3]):
-                    self.userConnected = True
-                    self.sendData("561")
-                else:
-                    self.sendData("165")
-        elif len(sortedData) > 0:
-            if sortedData[0] == "563":
-                print("deconnexion")
-                self.clientConnected = False 
+        compt = 0
+        while compt < len(sortedData):
+            commandFind = False
+            for command in self.COMMAND_LIST:
+                if sortedData[compt] == command:
+                    commandFind = True
+                    print(sortedData[compt])
+                    break
+            if commandFind == True:
+                if sortedData[compt] == "560" and not self.userConnected:
+                    if self.database.loginUser(sortedData[compt+1], sortedData[compt+2]):
+                        self.userConnected = True
+                        self.sendData("560")
+                    else:
+                        self.sendData("065")
+                    compt + 2
+                elif sortedData[compt] == "561" and not self.userConnected:
+                    if self.database.registerUser(sortedData[compt+1], sortedData[compt+2], sortedData[compt+3]):
+                        self.userConnected = True
+                        self.sendData("561")
+                    else:
+                        self.sendData("165")
+                    compt = compt + 3
+                if sortedData[compt] == "560" and not self.userConnected:
+                    if self.database.loginUser(sortedData[compt+1], sortedData[compt+2]):
+                        self.userConnected = True
+                        self.sendData("560")
+                    else:
+                        self.sendData("065")
+                    compt = compt + 2
+
+                elif sortedData[compt] == "561" and not self.userConnected:
+                    if self.database.registerUser(sortedData[compt+1], sortedData[compt+2], sortedData[compt+3]):
+                        self.userConnected = True
+                        self.sendData("561")
+                    else:
+                        self.sendData("165")
+                    compt = compt + 3    
+                elif sortedData[compt] == "563":
+                    print("deconnexion")
+                    self.clientConnected = False 
+            compt = compt + 1 
+
+
+
+
+        
 
 
 
