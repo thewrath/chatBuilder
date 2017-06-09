@@ -12,13 +12,13 @@ import threading
 
 class Client(threading.Thread):
 
-	def __init__(self):
+	def __init__(self, port):
 
 		self.serverConnected = False
 		threading.Thread.__init__(self)
 		self.tcpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
-			self.tcpsocket.connect(("", 1111))
+			self.tcpsocket.connect(("", port))
 			self.serverConnected = True
 		except:
 			print("Server not found")

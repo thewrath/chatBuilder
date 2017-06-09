@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
-import pymysql
+import cymysql
 
 class Database:
 
 	def __init__(self, host, user, passwd, db):
 
-		self.conn = pymysql.connect(host=host,
+		self.conn = cymysql.connect(host=host,
                              user=user,
-                             password=passwd,
+                             passwd=passwd,
                              db=db,
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+                             charset='utf8',
+                             cursorclass=cymysql.cursors.DictCursor)
 		cursor = self.conn.cursor()
 
 		cursor.execute("""
@@ -23,6 +23,7 @@ class Database:
 			CREATE TABLE IF NOT EXISTS messages (id int(5) NOT NULL AUTO_INCREMENT, sender varchar(50) DEFAULT NULL, 
 			receiver varchar(50) DEFAULT NULL, content varchar(1000) DEFAULT NULL, PRIMARY KEY(id) );
 			""")
+		cursor.close()
 
 	
 	def loginUser(self, username, password):
@@ -36,7 +37,6 @@ class Database:
 		        if result:
 		        	find = True
 		finally:
-		    self.dispose()
 		    return find
 
 	def registerUser(self, username, password, email):
@@ -54,7 +54,6 @@ class Database:
 					self.conn.commit()
 					register = True
 		finally:
-			self.dispose()
 			return register
 
 	def test(args, types):
@@ -75,7 +74,6 @@ class Database:
 				self.conn.commit()
 				saved = True
 		finally:
-			self.dispose()
 			return saved
 
 	def findMsg(self, sender, receiver):
@@ -91,7 +89,6 @@ class Database:
 					print("No available messages")
 					find = False
 		finally:
-			self,dispose()
 			return find
 
 	def dispose(self):

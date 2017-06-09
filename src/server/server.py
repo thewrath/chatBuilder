@@ -28,7 +28,7 @@ class Server(threading.Thread):
 		self.config = Configuration(configFile, section)
 		self.tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.tcpsock.bind(("",1111))
+		self.tcpsock.bind(("",int(float(self.config.get("port")))))
 
 	def run(self):
 
