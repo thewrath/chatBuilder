@@ -68,9 +68,15 @@ class Client(threading.Thread):
 			print(sortedData)
 		if sortedData[0] == "560":
 			self.userConnected = True
-
+		elif sortedData[0] == "565":
+			self.userConnected = False
+			self.username = ""
+			self.password = ""
+			
 	def loginUser(self, username, password):
 		self.sendData("560", username, password)
+		self.username = username
+		self.password = password
 
 	def registerUser(self, username, password, email):
 		self.sendData("561", username, password, email)
@@ -78,7 +84,11 @@ class Client(threading.Thread):
 	def sendMessage(self, senderName, receiverName, content):
 		self.sendData("562", senderName, receiverName, content)
 
-	def disconnect(self):
+	def disconnectUser(self):
+		if self.userConnected:
+			self.sendData("565", self.username, self.password)
+
+	def disconnectServer(self):
 		self.sendData("563")
 		self.serverConnected = False
 		self.tcpsocket.close()

@@ -5,3 +5,7 @@ corriger la boucle d'écoute du serveur
 créer un mode Debug
 
 remplacer l'analyse de command par des callbacks 
+
+plus de sécurité notamment pour la taille des tableaux
+
+ajouter des informations sûr les erreurs 

@@ -12,10 +12,6 @@ server.start()
 client = Client(5000)
 client.start()
 
-client.loginUser("igor","mdp")
-client.sendMessage("thomas","igor","content")
-
-
 class ClientApp(App):
     def build(self):
         return Button(text='Hello World')

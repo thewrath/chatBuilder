@@ -32,7 +32,9 @@ class ClientThread(threading.Thread):
         self.userConnected = False
         self.clientConnected = True
         self.database = db
-        self.COMMAND_LIST = ["560","561","562","563"]
+        self.COMMAND_LIST = ["560","561","562","563","565guygu"]
+        self.username = ""
+        self.password = ""
         print("[+] Nouveau thread pour %s %s" % (self.ip, self.port))
 
     def run(self):
@@ -115,11 +117,17 @@ class ClientThread(threading.Thread):
             if commandFind == True:
                 if sortedData[compt] == "560" and not self.userConnected:
                     if self.database.loginUser(sortedData[compt+1], sortedData[compt+2]):
+                        self.username = sortedData[compt+1]
+                        self.password = sortedData[compt+2]
                         self.userConnected = True
                         self.sendData("560")
                     else:
                         self.sendData("065")
                     compt + 2
+                elif sortedData[compt] == "565" and self.userConnected:
+                    if self.username == sortedData[compt+1] and self.password == sortedData[compt+2]:
+                        self.userConnected = False
+                        self.sendData("565")
                 elif sortedData[compt] == "561" and not self.userConnected:
                     if self.database.registerUser(sortedData[compt+1], sortedData[compt+2], sortedData[compt+3]):
                         self.userConnected = True
@@ -127,21 +135,6 @@ class ClientThread(threading.Thread):
                     else:
                         self.sendData("165")
                     compt = compt + 3
-                if sortedData[compt] == "560" and not self.userConnected:
-                    if self.database.loginUser(sortedData[compt+1], sortedData[compt+2]):
-                        self.userConnected = True
-                        self.sendData("560")
-                    else:
-                        self.sendData("065")
-                    compt = compt + 2
-
-                elif sortedData[compt] == "561" and not self.userConnected:
-                    if self.database.registerUser(sortedData[compt+1], sortedData[compt+2], sortedData[compt+3]):
-                        self.userConnected = True
-                        self.sendData("561")
-                    else:
-                        self.sendData("165")
-                    compt = compt + 3    
                 elif sortedData[compt] == "563":
                     print("deconnexion")
                     self.clientConnected = False 

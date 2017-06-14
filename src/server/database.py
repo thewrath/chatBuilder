@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
-import cymysql
+import pymysql
 
 class Database:
 
 	def __init__(self, host, user, passwd, db):
 
-		self.conn = cymysql.connect(host=host,
+		self.conn = pymysql.connect(host=host,
                              user=user,
-                             passwd=passwd,
+                             password=passwd,
                              db=db,
-                             charset='utf8',
-                             cursorclass=cymysql.cursors.DictCursor)
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
 		cursor = self.conn.cursor()
 
 		cursor.execute("""
